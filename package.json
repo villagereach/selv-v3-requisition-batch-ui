@@ -1,0 +1,16 @@
+{
+  "name": "openlmis-requisition-batch-ui",
+  "version": "1.0.0-beta-SNAPSHOT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/villagereach/openlmis-requisition-batch"
+  },
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "openlmis-ui": "file:///dev-ui"
+  },
+  "scripts": {
+    "postinstall": "cp -nr node_modules/dev-ui/node_modules ."
+  },
+  "dependencies": {}
+}
