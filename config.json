@@ -4,7 +4,8 @@
         "/openlmis-ui-layout",
         "/openlmis-auth-ui",
         "/openlmis-referencedata-ui",
-        "/openlmis-requisition-batch-ui"
+        "/openlmis-stockmanagement-ui",
+        "/openlmis-requisition-ui"
     ],
     "equipmentServiceURL": "/"
 }

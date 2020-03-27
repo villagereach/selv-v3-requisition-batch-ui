@@ -17,6 +17,10 @@
   version "1.6.6"
   resolved "https://codeload.github.com/angular/bower-angular-cookies/tar.gz/bfbea8fdf620274e616c93b8ad5096c5342768e3"
 
+"@bower_components/angular-drag-and-drop-lists@marceljuenemann/angular-drag-and-drop-lists#*":
+  version "2.1.0"
+  resolved "https://codeload.github.com/marceljuenemann/angular-drag-and-drop-lists/tar.gz/7e98e194a8d66fa735bf6dc7c3e39886287b914e"
+
 "@bower_components/angular-filter@a8m/angular-filter#^0.5":
   version "0.5.17"
   resolved "https://codeload.github.com/a8m/angular-filter/tar.gz/8285ffda674181667ef1ddc32b92b7d6bd6c3711"
@@ -38,6 +42,10 @@
 "@bower_components/angular-material@angular/bower-material#^1.1.5":
   version "1.1.10"
   resolved "https://codeload.github.com/angular/bower-material/tar.gz/e350a82ee2c6d094414ffd8dfbcf68cf3a16b83e"
+
+"@bower_components/angular-md5@gdi2290/angular-md5#0.1.10":
+  version "0.1.10"
+  resolved "https://codeload.github.com/gdi2290/angular-md5/tar.gz/f0c5d61f92a807b4d3a0b2be98890d8948e03fe7"
 
 "@bower_components/angular-messages@angular/bower-angular-messages#1.6.6":
   version "1.6.6"

@@ -1,0 +1,52 @@
+<h2>{{'selvRequisitionBatchApproval.title' | message}}</h2>
+<form class="sidebar" ng-submit="vm.search()">
+    <label for=program>{{'selvRequisitionBatchApproval.program' | message}}</label>
+    <select id="program" placeholder="{{'selvRequisitionBatchApproval.selectProgram' | message}}"
+            ng-model="vm.selectedProgram"
+            ng-options="program as program.name for program in vm.programs"
+            required>
+    </select>
+    <label for=processingPeriod>{{'selvRequisitionBatchApproval.processingPeriod' | message}}</label>
+    <select id="processingPeriod" placeholder="{{'selvRequisitionBatchApproval.selectProcessingPeriod' | message}}"
+            ng-model="vm.selectedProcessingPeriod"
+            ng-options="period as period.name for period in vm.processingPeriods"
+            required>
+    </select>
+    <input class="btn btn-primary" type="submit" value="{{'selvRequisitionBatchApproval.search' | message}}"/>
+</form>
+<section class="openlmis-table-container">
+    <table>
+        <caption ng-if="!vm.requisitionSummary">
+            {{'selvRequisitionBatchApproval.selectProgramAndPeriod' | message}}
+        </caption>
+        <thead>
+            <tr>
+                <th colspan="2" class="col-sticky">{{'selvRequisitionBatchApproval.product' | message}}</th>
+                <th colspan="3" ng-repeat="district in vm.districts">{{district}}</th>
+                <th colspan="3" class="col-sticky sticky-right">{{'selvRequisitionBatchApproval.totalForAllDistricts' | message}}</th>
+            </tr>
+            <tr>
+                <th class="col-sticky">{{'selvRequisitionBatchApproval.code' | message}}</th>
+                <th class="col-sticky">{{'selvRequisitionBatchApproval.name' | message}}</th>
+                <th ng-repeat-start="district in vm.districts">{{'selvRequisitionBatchApproval.stockOnHand' | message}}</th>
+                <th>{{'selvRequisitionBatchApproval.requestedQuantity' | message}}</th>
+                <th ng-repeat-end>{{'selvRequisitionBatchApproval.cost' | message}}</th>
+                <th class="col-sticky sticky-right">{{'selvRequisitionBatchApproval.stockOnHand' | message}}</th>
+                <th class="col-sticky sticky-right">{{'selvRequisitionBatchApproval.requestedQuantity' | message}}</th>
+                <th class="col-sticky sticky-right">{{'selvRequisitionBatchApproval.cost' | message}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="lineItem in vm.requisitionSummary.lineItems">
+                <td>{{lineItem.orderable.productCode}}</td>
+                <td>{{lineItem.orderable.fullProductName}}</td>
+                <td ng-repeat-start="district in vm.districts">{{lineItem.zoneSummaries[district].stockOnHand}}</td>
+                <td>{{lineItem.zoneSummaries[district].requestedQuantity}}</td>
+                <td ng-repeat-end>{{lineItem.zoneSummaries[district].cost}}</td>
+                <td>{{lineItem.stockOnHand}}</td>
+                <td>{{lineItem.requestedQuantity}}</td>
+                <td>{{lineItem.cost}}</td>
+            </tr>
+        </tbody>
+    </table>
+</section>

@@ -1,0 +1,16 @@
+{
+    "selvRequisitionBatchApproval.title": "Batch Approve",
+    "selvRequisitionBatchApproval.program": "Program",
+    "selvRequisitionBatchApproval.selectProgram": "Select Program",
+    "selvRequisitionBatchApproval.processingPeriod": "Processing Period",
+    "selvRequisitionBatchApproval.selectProcessingPeriod": "Select Processing Period",
+    "selvRequisitionBatchApproval.search": "Search",
+    "selvRequisitionBatchApproval.selectProgramAndPeriod": "You have to select both Program and Processing Period",
+    "selvRequisitionBatchApproval.product": "Product",
+    "selvRequisitionBatchApproval.totalForAllDistricts": "Total for all districts",
+    "selvRequisitionBatchApproval.code": "Code",
+    "selvRequisitionBatchApproval.name": "Name",
+    "selvRequisitionBatchApproval.stockOnHand": "Stock on Hand",
+    "selvRequisitionBatchApproval.requestedQuantity": "Requested Quantity",
+    "selvRequisitionBatchApproval.cost": "Cost"
+}

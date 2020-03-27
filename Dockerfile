@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-WORKDIR /openlmis-equipment-ui
+WORKDIR /selv-v3-requsition-batch-ui
 
 COPY package.json .
 COPY package-yarn.json .
