@@ -27,12 +27,15 @@
 
         $stateProvider.state('openlmis.requisitions.approvalSummary', {
             showInNavigation: true,
-            isOffline: false,
+            isOffline: true,
             label: 'selvRequisitionBatchApproval.title',
             url: '/batchApprovalList?programId&processingPeriodId',
             controller: 'SelvRequisitionBatchApprovalController',
             controllerAs: 'vm',
             templateUrl: 'selv-requisition-batch-approval/selv-requisition-batch-approval.html',
+            canAccess: function(permissionService, REQUISITION_RIGHTS) {
+                return permissionService.hasRoleWithRight(REQUISITION_RIGHTS.REQUISITION_APPROVE);
+            },
             resolve: {
                 requisitionSummary: function(requisitionSummaryService, $stateParams) {
                     if ($stateParams.programId && $stateParams.processingPeriodId) {
