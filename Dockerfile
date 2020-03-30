@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-WORKDIR /requsition-batch-ui
+WORKDIR /openlmis-requisition-batch-ui
 
 COPY package.json .
 COPY package-yarn.json .
