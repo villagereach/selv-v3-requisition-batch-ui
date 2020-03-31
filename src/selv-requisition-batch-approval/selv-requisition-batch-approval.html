@@ -48,5 +48,17 @@
                 <td>{{lineItem.cost}}</td>
             </tr>
         </tbody>
+        <tfoot>
+            <tr class="total-row">
+                <th class="col-sticky">{{'selvRequisitionBatchApproval.total' | message}}</th>
+                <th class="col-sticky"></th>
+                <th ng-repeat-start="district in vm.districts"></th>
+                <th></th>
+                <th ng-repeat-end>{{vm.requisitionSummary.districtTotalCosts[district]}}</th>
+                <th class="col-sticky col-sticky-right"></th>
+                <th class="col-sticky col-sticky-right"></th>
+                <th class="col-sticky col-sticky-right">{{vm.requisitionSummary.totalCost}}</th>
+            </tr>
+        </tfoot>
     </table>
 </section>

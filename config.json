@@ -8,5 +8,5 @@
         "/openlmis-requisition-ui",
         "/openlmis-requisition-batch-ui"
     ],
-    "equipmentServiceURL": "/"
+    "requisitionBatchServiceURL": "/"
 }

@@ -131,13 +131,7 @@
             }
 
             if (vm.requisitionSummary) {
-                vm.districts = [];
-                for (var zone in vm.requisitionSummary.lineItems[0].zoneSummaries) {
-                    if (vm.requisitionSummary.lineItems[0].zoneSummaries.hasOwnProperty(zone)) {
-                        vm.districts.push(zone);
-                    }
-                }
-                vm.districts.sort();
+                vm.districts = requisitionSummary.districts;
             }
         }
 

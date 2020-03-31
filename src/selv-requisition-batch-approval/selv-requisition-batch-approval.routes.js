@@ -27,7 +27,7 @@
 
         $stateProvider.state('openlmis.requisitions.approvalSummary', {
             showInNavigation: true,
-            isOffline: true,
+            isOffline: false,
             label: 'selvRequisitionBatchApproval.title',
             url: '/batchApprovalList?programId&processingPeriodId',
             controller: 'SelvRequisitionBatchApprovalController',

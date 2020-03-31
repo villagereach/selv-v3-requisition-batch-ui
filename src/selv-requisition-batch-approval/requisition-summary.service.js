@@ -120,6 +120,7 @@
         }
 
         function aggregateRequisitionSummaryData(requisitionSummary) {
+            var districts = new Set();
             requisitionSummary.lineItems.forEach(function(lineItem) {
                 lineItem.stockOnHand = 0;
                 lineItem.requestedQuantity = 0;
@@ -148,9 +149,15 @@
 
                 lineItem.zoneSummaries = lineItem.zoneSummaries.reduce(function(result, zoneSummary) {
                     result[zoneSummary.districtName] = zoneSummary;
+                    districts.add(zoneSummary.districtName);
                     return result;
                 }, {});
             });
+
+            requisitionSummary.districts = Array.from(districts);
+            requisitionSummary.districts.sort();
+
+            calculateTotalCosts(requisitionSummary);
 
             return requisitionSummary;
         }
@@ -161,6 +168,23 @@
             }).map(function(programOrderable) {
                 return programOrderable.pricePerPack;
             });
+        }
+
+        function calculateTotalCosts(requisitionSummary) {
+            var totalCost = 0;
+            requisitionSummary.districtTotalCosts = requisitionSummary.districts.reduce(function(result, district) {
+                result[district] = requisitionSummary.lineItems.reduce(function(sum, lineItem) {
+                    var zoneSummary = lineItem.zoneSummaries[district];
+
+                    if (zoneSummary) {
+                        sum += zoneSummary.cost;
+                    }
+                    return sum;
+                }, 0);
+                totalCost += result[district];
+                return result;
+            }, {});
+            requisitionSummary.totalCost = totalCost;
         }
     }
 })();
