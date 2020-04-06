@@ -1,5 +1,5 @@
 {
-    "selvRequisitionBatchApproval.title": "Approve",
+    "selvRequisitionBatchApproval.approve": "Approve",
     "selvRequisitionBatchApproval.program": "Program",
     "selvRequisitionBatchApproval.selectProgram": "Select Program",
     "selvRequisitionBatchApproval.processingPeriod": "Processing Period",
@@ -13,5 +13,7 @@
     "selvRequisitionBatchApproval.stockOnHand": "Stock on Hand",
     "selvRequisitionBatchApproval.requestedQuantity": "Requested Quantity",
     "selvRequisitionBatchApproval.cost": "Cost",
-    "selvRequisitionBatchApproval.total": "Total"
+    "selvRequisitionBatchApproval.total": "Total",
+    "selvRequisitionBatchApproval.edit": "Edit",
+    "selvRequisitionBatchApproval.approveSuccess": "Successfully approved all requisitions"
 }

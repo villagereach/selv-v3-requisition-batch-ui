@@ -1,0 +1,19 @@
+{
+    "selvRequisitionApprovalPage.approve": "Approve",
+    "selvRequisitionApprovalPage.approveRequisitions": "Approve Requisitions",
+    "selvRequisitionApprovalPage.all": "All",
+    "selvRequisitionApprovalPage.none": "None",
+    "selvRequisitionApprovalPage.noRequisitionsForApproval": "None requisitions for approval found.",
+    "selvRequisitionApprovalPage.program": "Program",
+    "selvRequisitionApprovalPage.facility": "Facility",
+    "selvRequisitionApprovalPage.period": "Period",
+    "selvRequisitionApprovalPage.startDate": "Start date",
+    "selvRequisitionApprovalPage.endDate": "End date",
+    "selvRequisitionApprovalPage.dateSubmitted": "Date submitted",
+    "selvRequisitionApprovalPage.dateAuthorized": "Date authorized",
+    "selvRequisitionApprovalPage.emergency": "Emergency",
+    "selvRequisitionApprovalPage.offline": "Offline",
+    "selvRequisitionApprovalPage.actions": "Actions",
+    "selvRequisitionApprovalPage.viewRequisition": "View Requisition",
+    "selvRequisitionApprovalPage.viewSelectedRequisitions": "View Selected Requisitions"
+}

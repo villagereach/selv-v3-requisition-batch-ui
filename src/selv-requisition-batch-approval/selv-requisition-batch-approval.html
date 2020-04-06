@@ -1,4 +1,4 @@
-<h2>{{'selvRequisitionBatchApproval.title' | message}}</h2>
+<h2>{{'selvRequisitionBatchApproval.approve' | message}}</h2>
 <form class="sidebar" ng-submit="vm.search()">
     <label for=program>{{'selvRequisitionBatchApproval.program' | message}}</label>
     <select id="program" placeholder="{{'selvRequisitionBatchApproval.selectProgram' | message}}"
@@ -40,9 +40,9 @@
             <tr ng-repeat="lineItem in vm.requisitionSummary.lineItems">
                 <td>{{lineItem.orderable.productCode}}</td>
                 <td>{{lineItem.orderable.fullProductName}}</td>
-                <td ng-repeat-start="district in vm.districts">{{lineItem.zoneSummaries[district].stockOnHand}}</td>
-                <td>{{lineItem.zoneSummaries[district].requestedQuantity}}</td>
-                <td ng-repeat-end>{{lineItem.zoneSummaries[district].cost}}</td>
+                <td ng-repeat-start="district in vm.districts">{{lineItem.districtSummaries[district].stockOnHand}}</td>
+                <td>{{lineItem.districtSummaries[district].requestedQuantity}}</td>
+                <td ng-repeat-end>{{lineItem.districtSummaries[district].cost}}</td>
                 <td>{{lineItem.stockOnHand}}</td>
                 <td>{{lineItem.requestedQuantity}}</td>
                 <td>{{lineItem.cost}}</td>
@@ -59,6 +59,23 @@
                 <th class="col-sticky col-sticky-right"></th>
                 <th class="col-sticky col-sticky-right">{{vm.requisitionSummary.totalCost}}</th>
             </tr>
+            <tr>
+                <th class="col-sticky"></th>
+                <th class="col-sticky"></th>
+                <th ng-repeat-start="district in vm.districts"></th>
+                <th>
+                    <button ng-click="vm.edit(district)">{{'selvRequisitionBatchApproval.edit' | message}}</button>
+                </th>
+                <th ng-repeat-end>
+                    <button class="primary" ng-click="vm.approve(district)">{{'selvRequisitionBatchApproval.approve' | message}}</button>
+                </th>
+                <th class="col-sticky col-sticky-right"></th>
+                <th class="col-sticky col-sticky-right"></th>
+                <th class="col-sticky col-sticky-right"></th>
+            </tr>
         </tfoot>
     </table>
 </section>
+<div class="openlmis-toolbar button-group">
+	<button class="primary" ng-click="vm.approveAll()">{{'selvRequisitionBatchApproval.approve' | message}}</button>
+</div>

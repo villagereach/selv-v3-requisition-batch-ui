@@ -21,41 +21,76 @@
         .module('selv-requisition-batch-approval')
         .factory('RequisitionSummaryDataBuilder', RequisitionSummaryDataBuilder);
 
-    RequisitionSummaryDataBuilder.$inject = ['RequisitionSummaryLineItemDataBuilder'];
+    RequisitionSummaryDataBuilder.$inject = [
+        'RequisitionSummaryLineItemDataBuilder', 'RequisitionSummary', 'OrderableDataBuilder'
+    ];
 
-    function RequisitionSummaryDataBuilder(RequisitionSummaryLineItemDataBuilder) {
+    function RequisitionSummaryDataBuilder(
+        RequisitionSummaryLineItemDataBuilder, RequisitionSummary, OrderableDataBuilder
+    ) {
 
+        RequisitionSummaryDataBuilder.prototype.buildJson = buildJson;
         RequisitionSummaryDataBuilder.prototype.build = build;
-        RequisitionSummaryDataBuilder.prototype.withZones = withZones;
+        RequisitionSummaryDataBuilder.prototype.withDistricts = withDistricts;
+        RequisitionSummaryDataBuilder.prototype.withOrderables = withOrderables;
 
         return RequisitionSummaryDataBuilder;
 
         function RequisitionSummaryDataBuilder() {
-            this.zones = ['test'];
-        }
-
-        function withZones(zones) {
-            this.zones = zones;
-            return this;
-        }
-
-        function build() {
-            return {
-                lineItems: [
-                    new RequisitionSummaryLineItemDataBuilder()
-                        .withZones(this.zones)
-                        .build(),
-                    new RequisitionSummaryLineItemDataBuilder()
-                        .withZones(this.zones)
-                        .build(),
-                    new RequisitionSummaryLineItemDataBuilder()
-                        .withZones(this.zones)
-                        .build()
-                ],
-                districts: this.zones
+            this.districts = ['district1'];
+            this.orderables = [new OrderableDataBuilder().buildJson()];
+            this.program = {
+                id: 'program-id'
+            };
+            this.processingPeriod = {
+                id: 'period-id'
             };
         }
 
-    }
+        function withDistricts(districts) {
+            this.districts = districts;
+            return this;
+        }
 
+        function withOrderables(orderables) {
+            this.orderables = orderables;
+            return this;
+        }
+
+        function buildJson() {
+            var builder = this;
+            var orderablesMap = builder.orderables.reduce(function(result, orderable) {
+                if (!result[orderable.id]) {
+                    result[orderable.id] = [];
+                }
+                result[orderable.id].push(orderable.meta.versionNumber);
+                return result;
+            }, {});
+            return {
+                program: builder.program,
+                processingPeriod: builder.processingPeriod,
+                lineItems: Object.keys(orderablesMap).map(function(orderableId) {
+                    return new RequisitionSummaryLineItemDataBuilder()
+                        .withOrderableId(orderableId)
+                        .withDistrictsAndVersions(builder.districts.reduce(function(result, district) {
+                            result[district] = orderablesMap[orderableId];
+                            return result;
+                        }, {}))
+                        .build();
+                }),
+                districtRequisitionIds: builder.districts.reduce(function(result, district) {
+                    result[district] = ['requisition-id-' + district];
+                    return result;
+                }, {}),
+                districtSupervisoryNodeIds: builder.districts.reduce(function(result, district) {
+                    result[district] = ['supervisory-node-id-' + district];
+                    return result;
+                }, {})
+            };
+        }
+
+        function build() {
+            return new RequisitionSummary(this.buildJson(), this.orderables);
+        }
+    }
 })();

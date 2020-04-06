@@ -1,0 +1,52 @@
+<h2>{{'selvRequisitionApprovalPage.approveRequisitions' | message}}</h2>
+<div class="openlmis-table-container">
+    <ul ng-if="vm.isBatchApproveScreenActive">
+        <li><a ng-click="vm.toggleSelectAll(true)">{{'selvRequisitionApprovalPage.all' | message}}</a></li>
+        <li><a ng-click="vm.toggleSelectAll(false)">{{'selvRequisitionApprovalPage.none' | message}}</a></li>
+    </ul>
+    <table>
+        <caption ng-if="!vm.requisitions.length">
+            {{'selvRequisitionApprovalPage.noRequisitionsForApproval' | message}}
+        </caption>
+        <thead>
+        <tr>
+            <th class="col-sticky">{{ 'selvRequisitionApprovalPage.approve' | message }}</th>
+            <th>{{'selvRequisitionApprovalPage.program' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.facility' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.period' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.startDate' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.endDate' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.dateSubmitted' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.dateAuthorized' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.emergency' | message}}</th>
+            <th>{{'selvRequisitionApprovalPage.offline' | message}}</th>
+            <th class="col-sticky sticky-right">{{'selvRequisitionApprovalPage.actions' | message}}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="requisition in vm.requisitions">
+            <td><input type="checkbox" ng-model="requisition.$selected"></td>
+            <td>{{requisition.program.name}}</td>
+            <td>{{requisition.facility.code}} - {{requisition.facility.name}}</td>
+            <td>{{requisition.processingPeriod.name}}</td>
+            <td>{{requisition.processingPeriod.startDate | openlmisDate}}</td>
+            <td>{{requisition.processingPeriod.endDate | openlmisDate}}</td>
+            <td ng-if="!requisition.extraData.originalRequisition">{{requisition.statusChanges.SUBMITTED.changeDate | openlmisDate}}</td>
+            <td ng-if="requisition.extraData.originalRequisition">{{ 'selvRequisitionApprovalPage.notApplicable' | message }}</td>
+            <td ng-if="!requisition.extraData.originalRequisition">{{requisition.statusChanges.AUTHORIZED.changeDate | openlmisDate}}</td>
+            <td ng-if="requisition.extraData.originalRequisition">{{ 'selvRequisitionApprovalPage.notApplicable' | message }}</td>
+            <td class="col-emergency"><span ng-if="requisition.emergency" class="icon-ok"></span></td>
+            <td class="col-emergency"><i ng-class="{'icon-ok': requisition.$availableOffline}"></i></td>
+            <td>
+                <button ng-if="vm.isFullRequisitionAvailable(requisition.id)" class="primary" ng-click="vm.openRnr(requisition.id)">
+                    {{'selvRequisitionApprovalPage.viewRequisition' | message}}
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <openlmis-pagination list="vm.requisitions" paged-list="vm.requisitionPage" pagination-id="'selvApprovalList'" />
+</div>
+<div class="openlmis-toolbar" ng-if="vm.requisitions.length">
+    <button class="primary" ng-click="vm.viewSelectedRequisitions()">{{'selvRequisitionApprovalPage.viewSelectedRequisitions' | message}}</button>
+</div>

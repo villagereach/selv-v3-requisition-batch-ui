@@ -23,7 +23,7 @@
      * @description
      * Responsible for managing requisition for approval list screen.
      */
-    angular.module('selv-requisition-batch-approval', [
+    angular.module('selv-requisition-approval-list', [
         'requisition',
         'requisition-batch-approval',
         'openlmis-auth',

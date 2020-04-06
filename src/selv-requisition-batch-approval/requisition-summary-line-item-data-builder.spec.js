@@ -21,47 +21,50 @@
         .module('selv-requisition-batch-approval')
         .factory('RequisitionSummaryLineItemDataBuilder', RequisitionSummaryLineItemDataBuilder);
 
-    RequisitionSummaryLineItemDataBuilder.$inject = ['OrderableDataBuilder'];
-
-    function RequisitionSummaryLineItemDataBuilder(OrderableDataBuilder) {
+    function RequisitionSummaryLineItemDataBuilder() {
 
         RequisitionSummaryLineItemDataBuilder.prototype.build = build;
-        RequisitionSummaryLineItemDataBuilder.prototype.withZones = withZones;
+        RequisitionSummaryLineItemDataBuilder.prototype.withDistrictsAndVersions = withDistrictsAndVersions;
+        RequisitionSummaryLineItemDataBuilder.prototype.withOrderableId = withOrderableId;
 
         return RequisitionSummaryLineItemDataBuilder;
 
         function RequisitionSummaryLineItemDataBuilder() {
-            this.zones = ['test'];
-            this.orderable = new OrderableDataBuilder().buildJson();
-            this.stockOnHand = getRandomInt(100);
-            this.requestedQuantity = getRandomInt(100);
-            this.packsToShip = getRandomInt(100);
-            this.cost = getRandomInt(100);
+            this.districtsWithVersions = {
+                district1: ['1']
+            };
+            this.orderableId = 'orderable-id';
         }
 
-        function withZones(zones) {
-            this.zones = zones;
+        function withDistrictsAndVersions(districtsWithVersions) {
+            this.districtsWithVersions = districtsWithVersions;
+            return this;
+        }
+
+        function withOrderableId(orderableId) {
+            this.orderableId = orderableId;
             return this;
         }
 
         function build() {
-            var zoneSummaries = this.zones.reduce(function(result, zoneName) {
-                result[zoneName] = {
-                    districtName: zoneName,
-                    stockOnHand: getRandomInt(100),
-                    requestedQuantity: getRandomInt(100),
-                    packsToShip: getRandomInt(100),
-                    cost: getRandomInt(100)
-                };
-                return result;
-            }, {});
-
+            var builder = this;
             return {
-                zoneSummaries: zoneSummaries,
-                stockOnHand: this.stockOnHand,
-                requestedQuantity: this.requestedQuantity,
-                packsToShip: this.packsToShip,
-                cost: this.cost
+                orderable: {
+                    id: builder.orderableId
+                },
+                districtSummaries: Object.keys(builder.districtsWithVersions).reduce(function(result, districtName) {
+                    result[districtName] = {
+                        orderableVersions: builder.districtsWithVersions[districtName].map(function(version) {
+                            return {
+                                versionNumber: version,
+                                stockOnHand: getRandomInt(100),
+                                requestedQuantity: getRandomInt(100),
+                                packsToShip: getRandomInt(100)
+                            };
+                        })
+                    };
+                    return result;
+                }, {})
             };
         }
 
@@ -69,5 +72,4 @@
             return Math.floor(Math.random() * Math.floor(max));
         }
     }
-
 })();

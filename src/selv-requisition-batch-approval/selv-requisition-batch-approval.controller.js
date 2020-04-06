@@ -29,14 +29,19 @@
         .module('selv-requisition-batch-approval')
         .controller('SelvRequisitionBatchApprovalController', controller);
 
-    controller.$inject = ['$state', 'requisitionSummary', '$stateParams', 'programs', 'processingPeriods'];
+    controller.$inject = ['$state', 'requisitionSummary', '$stateParams', 'programs', 'processingPeriods',
+        'requisitionBatchApprovalService', 'loadingModalService', 'notificationService'];
 
-    function controller($state, requisitionSummary, $stateParams, programs, processingPeriods) {
+    function controller($state, requisitionSummary, $stateParams, programs, processingPeriods,
+                        requisitionBatchApprovalService, loadingModalService, notificationService) {
 
         var vm = this;
 
         vm.$onInit = onInit;
         vm.search = search;
+        vm.approve = approve;
+        vm.approveAll = approveAll;
+        vm.edit = edit;
 
         /**
          * @ngdoc property
@@ -149,6 +154,70 @@
             stateParams.programId = vm.selectedProgram ? vm.selectedProgram.id : null;
             stateParams.processingPeriodId = vm.selectedProcessingPeriod ? vm.selectedProcessingPeriod.id : null;
 
+            reloadState(stateParams);
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf selv-requisition-batch-approval.controller:SelvRequisitionBatchApprovalController
+         * @name edit
+         *
+         * @description
+         * Redirects to approval list for given districts.
+         * 
+         * @param {string} district name of a district
+         */
+        function edit(districtName) {
+            var stateParams = angular.copy($stateParams);
+
+            stateParams.supervisoryNodeId = requisitionSummary.getSupervisoryNodesIds(districtName);
+            stateParams.programId = requisitionSummary.program.id;
+            stateParams.processingPeriodId = requisitionSummary.processingPeriod.id;
+
+            $state.go('openlmis.requisitions.approvalList', stateParams);
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf selv-requisition-batch-approval.controller:SelvRequisitionBatchApprovalController
+         * @name approveAll
+         *
+         * @description
+         * Approves all requisitions from the requisition summary.
+         */
+        function approveAll() {
+            decorateApproveCall(vm.requisitionSummary.getRequisitionIds());
+        }
+
+        /**
+         * @ngdoc method
+         * @methodOf selv-requisition-batch-approval.controller:SelvRequisitionBatchApprovalController
+         * @name approve
+         *
+         * @description
+         * Approves all requisitions from the requisition summary for given district.
+         * 
+         * @param {string} district name of a district to approve requisitions for
+         */
+        function approve(district) {
+            decorateApproveCall(vm.requisitionSummary.getRequisitionIds(district));
+        }
+
+        function decorateApproveCall(requisitionIds) {
+            var loadingPromise = loadingModalService.open();
+            requisitionBatchApprovalService.approveAll(requisitionIds).then(function() {
+                loadingPromise.then(function() {
+                    notificationService.success('selvRequisitionBatchApproval.success');
+                });
+                reloadState($stateParams);
+            })
+                .catch(function() {
+                    loadingModalService.close();
+                    notificationService.error('selvRequisitionBatchApproval.failure');
+                });
+        }
+
+        function reloadState(stateParams) {
             $state.go('openlmis.requisitions.approvalSummary', stateParams, {
                 reload: true
             });

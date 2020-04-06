@@ -22,16 +22,15 @@
      * @name selv-requisition-batch-approval.requisitionSummaryService
      *
      * @description
-     * Builds object ready to be displayed for Batch Approval page from requisition summary retrieved from server.
-     * It is using cached orderables to aggregate the data and display proper total prices.
+     * Allows getting Requisition Summary from server and builds object ready to display.
      */
     angular
         .module('selv-requisition-batch-approval')
         .service('requisitionSummaryService', service);
 
-    service.$inject = ['RequisitionSummaryResource', 'OrderableResource'];
+    service.$inject = ['RequisitionSummaryResource', 'OrderableResource', 'RequisitionSummary'];
 
-    function service(RequisitionSummaryResource, OrderableResource) {
+    function service(RequisitionSummaryResource, OrderableResource, RequisitionSummary) {
 
         this.getRequisitionSummary = getRequisitionSummary;
 
@@ -41,10 +40,10 @@
          * @name getRequisitionSummary
          *
          * @description
-         * Gets requisition summary from server and adds orderable info using cached resources.
+         * Gets requisition summary from server and adds orderable info using cached orderables.
          * 
-         * @param  {String}  programId          given program id
-         * @param  {Object}  processingPeriodId given period id
+         * @param  {string}  programId          given program id
+         * @param  {string}  processingPeriodId given period id
          * @return {Promise}                    requisition summary properly aggregated with 
          */
         function getRequisitionSummary(programId, processingPeriodId) {
@@ -57,134 +56,30 @@
         function extendSummaryWithOrderables(requisitionSummary) {
             return new OrderableResource().getByVersionIdentities(getOrderableIdentities(requisitionSummary))
                 .then(function(orderables) {
-                    var orderablesMap = getOrderablesMap(orderables);
-                    setOrderableDetails(requisitionSummary, orderablesMap);
-                    return aggregateRequisitionSummaryData(requisitionSummary);
+                    return new RequisitionSummary(requisitionSummary, orderables);
                 });
         }
 
         function getOrderableIdentities(requisitionSummary) {
-            return requisitionSummary.lineItems.map(function(lineItem) {
-                return lineItem.zoneSummaries.flatMap(function(zoneSummary) {
-                    return zoneSummary.orderableVersions;
-                })
-                    .map(function(orderableVersionSummary) {
-                        return {
-                            versionNumber: orderableVersionSummary.versionNumber,
-                            id: lineItem.orderable.id
-                        };
-                    });
-            })
-                .flatMap(function(array) {
-                    return array;
-                });
-        }
-
-        function getOrderablesMap(orderables) {
-            return orderables.reduce(function(result, orderable) {
-                if (!result[orderable.id]) {
-                    result[orderable.id] = {};
-                }
-                result[orderable.id][orderable.meta.versionNumber] = orderable;
+            var orderablesMap = requisitionSummary.lineItems.reduce(function(result, lineItem) {
+                result[lineItem.orderable.id] = Array.from(Object.keys(lineItem.districtSummaries)
+                    .reduce(function(versions, districtName) {
+                        lineItem.districtSummaries[districtName].orderableVersions.map(function(orderableVersion) {
+                            versions.add(orderableVersion.versionNumber);
+                        });
+                        return versions;
+                    }, new Set()));
                 return result;
             }, {});
-        }
-
-        function setOrderableDetails(requisitionSummary, orderablesMap) {
-            requisitionSummary.lineItems.forEach(function(lineItem) {
-                var orderableVersionMap = orderablesMap[lineItem.orderable.id],
-                    newestOrderableVersion = getNewestOrderableVersionNumber(orderableVersionMap),
-                    newestOrderable = orderableVersionMap[newestOrderableVersion];
-
-                lineItem.orderable.fullProductName = newestOrderable.fullProductName;
-                lineItem.orderable.productCode = newestOrderable.productCode;
-
-                lineItem.zoneSummaries.forEach(function(zoneSummary) {
-                    zoneSummary.orderableVersions.forEach(function(orderableVersionSummary) {
-                        var orderable = orderableVersionMap[orderableVersionSummary.versionNumber];
-                        orderableVersionSummary.pricePerPack =
-                            getPricePerPack(orderable, requisitionSummary.program.id);
-                    });
+            var result = Object.keys(orderablesMap).flatMap(function(orderableId) {
+                return orderablesMap[orderableId].map(function(versionNumber) {
+                    return {
+                        versionNumber: versionNumber,
+                        id: orderableId
+                    };
                 });
             });
-        }
-
-        function getNewestOrderableVersionNumber(orderableVersionsMap) {
-            var newestVersionNumber = -1;
-            for (var property in orderableVersionsMap) {
-                if (orderableVersionsMap.hasOwnProperty(property) && parseInt(property, 10) > newestVersionNumber) {
-                    newestVersionNumber = parseInt(property, 10);
-                }
-            }
-            return newestVersionNumber;
-        }
-
-        function aggregateRequisitionSummaryData(requisitionSummary) {
-            var districts = new Set();
-            requisitionSummary.lineItems.forEach(function(lineItem) {
-                lineItem.stockOnHand = 0;
-                lineItem.requestedQuantity = 0;
-                lineItem.packsToShip = 0;
-                lineItem.cost = 0;
-
-                lineItem.zoneSummaries.forEach(function(zoneSummary) {
-                    zoneSummary.stockOnHand = 0;
-                    zoneSummary.requestedQuantity = 0;
-                    zoneSummary.packsToShip = 0;
-                    zoneSummary.cost = 0;
-
-                    zoneSummary.orderableVersions.forEach(function(orderableVersionSummary) {
-                        zoneSummary.stockOnHand += orderableVersionSummary.stockOnHand;
-                        zoneSummary.requestedQuantity += orderableVersionSummary.requestedQuantity;
-                        zoneSummary.packsToShip += orderableVersionSummary.packsToShip;
-                        zoneSummary.cost += orderableVersionSummary.packsToShip *
-                            orderableVersionSummary.pricePerPack;
-                    });
-
-                    lineItem.stockOnHand += zoneSummary.stockOnHand;
-                    lineItem.requestedQuantity += zoneSummary.requestedQuantity;
-                    lineItem.packsToShip += zoneSummary.packsToShip;
-                    lineItem.cost += zoneSummary.cost;
-                });
-
-                lineItem.zoneSummaries = lineItem.zoneSummaries.reduce(function(result, zoneSummary) {
-                    result[zoneSummary.districtName] = zoneSummary;
-                    districts.add(zoneSummary.districtName);
-                    return result;
-                }, {});
-            });
-
-            requisitionSummary.districts = Array.from(districts);
-            requisitionSummary.districts.sort();
-
-            calculateTotalCosts(requisitionSummary);
-
-            return requisitionSummary;
-        }
-
-        function getPricePerPack(orderable, programId) {
-            return orderable.programs.filter(function(programOrderable) {
-                return programOrderable.programId === programId;
-            }).map(function(programOrderable) {
-                return programOrderable.pricePerPack;
-            });
-        }
-
-        function calculateTotalCosts(requisitionSummary) {
-            var totalCost = 0;
-            requisitionSummary.districtTotalCosts = requisitionSummary.districts.reduce(function(result, district) {
-                result[district] = requisitionSummary.lineItems.reduce(function(sum, lineItem) {
-                    var zoneSummary = lineItem.zoneSummaries[district];
-
-                    if (zoneSummary) {
-                        sum += zoneSummary.cost;
-                    }
-                    return sum;
-                }, 0);
-                totalCost += result[district];
-                return result;
-            }, {});
-            requisitionSummary.totalCost = totalCost;
+            return result;
         }
     }
 })();
