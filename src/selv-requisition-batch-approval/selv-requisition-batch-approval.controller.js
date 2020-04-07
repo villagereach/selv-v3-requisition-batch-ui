@@ -207,13 +207,13 @@
             var loadingPromise = loadingModalService.open();
             requisitionBatchApprovalService.approveAll(requisitionIds).then(function() {
                 loadingPromise.then(function() {
-                    notificationService.success('selvRequisitionBatchApproval.success');
+                    notificationService.success('selvRequisitionBatchApproval.approveSuccess');
                 });
                 reloadState($stateParams);
             })
                 .catch(function() {
                     loadingModalService.close();
-                    notificationService.error('selvRequisitionBatchApproval.failure');
+                    notificationService.error('selvRequisitionBatchApproval.approveFailure');
                 });
         }
 

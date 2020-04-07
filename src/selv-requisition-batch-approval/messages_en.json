@@ -15,5 +15,6 @@
     "selvRequisitionBatchApproval.cost": "Cost",
     "selvRequisitionBatchApproval.total": "Total",
     "selvRequisitionBatchApproval.edit": "Edit",
-    "selvRequisitionBatchApproval.approveSuccess": "Successfully approved all requisitions"
+    "selvRequisitionBatchApproval.approveSuccess": "Successfully approved all requisitions",
+    "selvRequisitionBatchApproval.approveFailure": "Error occurred during approval of requisitions."
 }

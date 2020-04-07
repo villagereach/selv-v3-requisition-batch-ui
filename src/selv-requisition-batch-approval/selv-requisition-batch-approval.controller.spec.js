@@ -191,7 +191,8 @@ describe('SelvRequisitionBatchApprovalController', function() {
 
             this.$rootScope.$apply();
 
-            expect(this.notificationService.success).toHaveBeenCalledWith('selvRequisitionBatchApproval.success');
+            expect(this.notificationService.success)
+                .toHaveBeenCalledWith('selvRequisitionBatchApproval.approveSuccess');
         });
 
         it('should reload state with current state params', function() {
@@ -222,7 +223,7 @@ describe('SelvRequisitionBatchApprovalController', function() {
             this.vm.approveAll();
             this.$rootScope.$apply();
 
-            expect(this.notificationService.error).toHaveBeenCalledWith('selvRequisitionBatchApproval.failure');
+            expect(this.notificationService.error).toHaveBeenCalledWith('selvRequisitionBatchApproval.approveFailure');
         });
     });
 
@@ -249,7 +250,8 @@ describe('SelvRequisitionBatchApprovalController', function() {
             this.vm.approve(this.districts[0]);
             this.$rootScope.$apply();
 
-            expect(this.notificationService.success).toHaveBeenCalledWith('selvRequisitionBatchApproval.success');
+            expect(this.notificationService.success)
+                .toHaveBeenCalledWith('selvRequisitionBatchApproval.approveSuccess');
         });
 
         it('should reload state with current state params', function() {
@@ -279,7 +281,7 @@ describe('SelvRequisitionBatchApprovalController', function() {
             this.vm.approve(this.districts[0]);
             this.$rootScope.$apply();
 
-            expect(this.notificationService.error).toHaveBeenCalledWith('selvRequisitionBatchApproval.failure');
+            expect(this.notificationService.error).toHaveBeenCalledWith('selvRequisitionBatchApproval.approveFailure');
         });
     });
 
