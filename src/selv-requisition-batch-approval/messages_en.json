@@ -16,5 +16,6 @@
     "selvRequisitionBatchApproval.total": "Total",
     "selvRequisitionBatchApproval.edit": "Edit",
     "selvRequisitionBatchApproval.approveSuccess": "Successfully approved all requisitions",
-    "selvRequisitionBatchApproval.approveFailure": "Error occurred during approval of requisitions."
+    "selvRequisitionBatchApproval.approveFailure": "Error occurred during approval of requisitions.",
+    "selvRequisitionBatchApproval.summaryNoData": "You have no requisitions to approve for given Program and Processing Period."
 }
