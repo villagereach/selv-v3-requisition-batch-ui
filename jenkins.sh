@@ -1,5 +1,6 @@
 echo "building image"
 cp ./credentials/test_env/settings.env .env
+echo "" >> .env && cat ./credentials/shared/versions.env >> .env
 
 /usr/local/bin/docker-compose pull
 /usr/local/bin/docker-compose down --volumes
