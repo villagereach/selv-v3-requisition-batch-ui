@@ -159,7 +159,7 @@ describe('SelvRequisitionBatchApprovalController', function() {
 
             this.vm.edit(this.districts[0]);
 
-            expect(this.$state.go).toHaveBeenCalledWith('openlmis.requisitions.approvalList', {
+            expect(this.$state.go).toHaveBeenCalledWith('openlmis.requisitions.batchApprovalList', {
                 programId: this.requisitionSummary.program.id,
                 processingPeriodId: this.requisitionSummary.processingPeriod.id,
                 supervisoryNodeId: this.requisitionSummary.getSupervisoryNodesIds(this.districts[0])

@@ -25,7 +25,7 @@
 
     function routes($stateProvider) {
 
-        $stateProvider.state('openlmis.requisitions.approvalList', {
+        $stateProvider.state('openlmis.requisitions.batchApprovalList', {
             showInNavigation: false,
             isOffline: false,
             label: 'selvRequisitionApprovalPage.approve',

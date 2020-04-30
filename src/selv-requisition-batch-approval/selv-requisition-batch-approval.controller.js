@@ -174,7 +174,7 @@
             stateParams.programId = requisitionSummary.program.id;
             stateParams.processingPeriodId = requisitionSummary.processingPeriod.id;
 
-            $state.go('openlmis.requisitions.approvalList', stateParams);
+            $state.go('openlmis.requisitions.batchApprovalList', stateParams);
         }
 
         /**
