@@ -20,6 +20,7 @@ describe('selvRequisitionApprovalService', function() {
         var context = this;
 
         module('selv-requisition-approval-list');
+        module('requisition-view-tab');
 
         inject(function($injector) {
             this.RequisitionDataBuilder = $injector.get('RequisitionDataBuilder');
